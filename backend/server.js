@@ -14,7 +14,6 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-// socket.io
 io.on("connection", (socket) => {
   console.log("✅ User connected:", socket.id);
 
@@ -33,7 +32,6 @@ app.post("/send", (req, res) => {
 app.get("/", (req, res) => {
   res.send("🚀 Backend is running fine!");
 });
-
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Backend running on ${PORT}`));

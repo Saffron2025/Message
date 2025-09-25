@@ -10,10 +10,11 @@ function createWindow() {
     },
   });
 
-  // dev
   if (!app.isPackaged) {
+    // Dev mode
     win.loadURL("http://localhost:5173");
   } else {
+    // Production mode: load Vite build
     win.loadFile(path.join(__dirname, "../dist/index.html"));
   }
 }

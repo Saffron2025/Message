@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-// backend url
-const socket = io("http://localhost:5000");
+// ⚡ Apna deployed backend ka URL daalo
+const socket = io("https://message-backend-dn9x.onrender.com");
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -10,7 +10,11 @@ function App() {
   useEffect(() => {
     socket.on("notification", (msg) => {
       setMessages((prev) => [...prev, msg]);
-      new window.Notification("📢 New Message", { body: msg });
+
+      new window.Notification("📢 New Message", {
+        body: msg,
+        icon: "https://img.icons8.com/?size=512&id=85785&format=png"
+      });
     });
   }, []);
 
