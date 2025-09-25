@@ -12,9 +12,10 @@ dist
 dist-ssr
 *.local
 
-# ignore build outputs
-/release
-/dist
+release/
+dist/
+Frontend/release/
+Frontend/dist/
 
 # Editor directories and files
 .vscode/*
