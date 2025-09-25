@@ -28,6 +28,7 @@
   "build": {
     "appId": "com.message.app",
     "productName": "MessageApp",
+    
     "files": [
       "dist/**/*",
       "electron/**/*",

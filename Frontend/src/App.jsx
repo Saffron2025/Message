@@ -1,20 +1,12 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-
-// ⚡ Apna deployed backend ka URL daalo
-const socket = io("https://message-backend-dn9x.onrender.com");
 
 function App() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    socket.on("notification", (msg) => {
+    // ✅ Electron se notification messages suno
+    window.electronAPI?.onMessage((msg) => {
       setMessages((prev) => [...prev, msg]);
-
-      new window.Notification("📢 New Message", {
-        body: msg,
-        icon: "https://img.icons8.com/?size=512&id=85785&format=png"
-      });
     });
   }, []);
 

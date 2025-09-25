@@ -33,5 +33,11 @@ app.get("/", (req, res) => {
   res.send("🚀 Backend is running fine!");
 });
 
+// ✅ Health check endpoint
+app.get("/ping", (req, res) => {
+  res.status(200).json({ ok: true, msg: "pong 🟢 Backend is awake!" });
+});
+
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Backend running on ${PORT}`));
