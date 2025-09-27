@@ -26,8 +26,8 @@
     "electron-builder": "^24.13.3"
   },
   "build": {
-    "appId": "com.message.app",
-    "productName": "MessageApp",
+    "appId": "com.defendmepro.app",
+    "productName": "Defend Me Pro",
     
     "files": [
       "dist/**/*",

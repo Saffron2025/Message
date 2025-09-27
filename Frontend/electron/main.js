@@ -1,10 +1,11 @@
-const { app, BrowserWindow, ipcMain, Notification, Tray, Menu } = require("electron");
+const { app, BrowserWindow, ipcMain, Notification, Tray, Menu, shell } = require("electron");
 const path = require("path");
 const io = require("socket.io-client");
 
 let win;
 let tray;
 
+// ✅ Create Main Window
 function createWindow() {
   win = new BrowserWindow({
     width: 900,
@@ -20,15 +21,16 @@ function createWindow() {
     win.loadFile(path.join(__dirname, "../dist/index.html")); // Build mode
   }
 
-  // ❌ Prevent app from quitting when window is closed
+  // ❌ Prevent app from quitting when closed
   win.on("close", (event) => {
     event.preventDefault();
-    win.hide(); // Hide instead of closing
+    win.hide(); // Hide instead of quit
   });
 }
 
+// ✅ System Tray Setup
 function setupTray() {
-  tray = new Tray(path.join(__dirname, "../build/icon.png"));
+  tray = new Tray(path.join(__dirname, "../build/icon.ico")); // tray icon
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Show App",
@@ -47,22 +49,30 @@ function setupTray() {
   tray.setContextMenu(contextMenu);
 }
 
+// ✅ Socket.IO Connection
 function setupSocket() {
-  const socket = io("https://message-backend-dn9x.onrender.com"); // ✅ deployed backend
+  const socket = io("https://message-backend-dn9x.onrender.com"); // deployed backend
 
   socket.on("connect", () => {
     console.log("✅ Connected to backend socket");
   });
 
+  // 🔔 Listen for notifications
   socket.on("notification", (msg) => {
-    // System notification
-    new Notification({
+    const notification = new Notification({
       title: "📢 New Message",
       body: msg,
-      icon: path.join(__dirname, "../build/icon.png"),
-    }).show();
+      icon: path.join(__dirname, "../build/icon.ico"),
+    });
 
-    // React app ko bhi bhejo
+    notification.show();
+
+    // Example: notification click opens link (optional)
+    notification.on("click", () => {
+      shell.openExternal("https://your-link.com"); // 👈 Replace with your link
+    });
+
+    // Forward to React app also
     if (win) {
       win.webContents.send("new-message", msg);
     }
@@ -73,18 +83,24 @@ function setupSocket() {
   });
 }
 
+// ✅ App Ready
 app.whenReady().then(() => {
   createWindow();
   setupSocket();
   setupTray();
 });
 
+// ✅ IPC for manual notifications
 ipcMain.on("show-notification", (event, { title, body }) => {
-  new Notification({ title, body }).show();
+  new Notification({
+    title,
+    body,
+    icon: path.join(__dirname, "../build/icon.ico"),
+  }).show();
 });
 
+// ✅ Keep running in background
 app.on("window-all-closed", () => {
-  // Mac users ke liye background me rakho
   if (process.platform !== "darwin") app.quit();
 });
 
