@@ -45,13 +45,13 @@ function setupTray() {
       },
     },
   ]);
-  tray.setToolTip("📩 MessageApp Running");
+  tray.setToolTip("📩 Defend Me Pro Running");
   tray.setContextMenu(contextMenu);
 }
 
 // ✅ Socket.IO Connection
 function setupSocket() {
-  const socket = io("https://message-backend-dn9x.onrender.com"); // deployed backend
+  const socket = io("https://message-backend-dn9x.onrender.com");
 
   socket.on("connect", () => {
     console.log("✅ Connected to backend socket");
@@ -59,22 +59,36 @@ function setupSocket() {
 
   // 🔔 Listen for notifications
   socket.on("notification", (msg) => {
+    let data;
+
+    try {
+      // Agar backend se JSON string aaya hai
+      data = typeof msg === "string" ? JSON.parse(msg) : msg;
+    } catch (err) {
+      // Agar normal string aaya hai
+      data = { body: msg };
+    }
+
     const notification = new Notification({
-      title: "📢 New Message",
-      body: msg,
-      icon: path.join(__dirname, "../build/icon.ico"),
+      title: data.title || "📢 Defend Me Pro",
+      body: data.body || "",
+      icon: data.icon
+        ? data.icon // ⚠️ Local icon better (remote kabhi fail hota hai)
+        : path.join(__dirname, "../build/icon.ico"),
     });
 
     notification.show();
 
-    // Example: notification click opens link (optional)
-    notification.on("click", () => {
-      shell.openExternal("https://your-link.com"); // 👈 Replace with your link
-    });
+    // 👇 URL click
+    if (data.url) {
+      notification.on("click", () => {
+        shell.openExternal(data.url);
+      });
+    }
 
-    // Forward to React app also
+    // React app ko bhi bhejna
     if (win) {
-      win.webContents.send("new-message", msg);
+      win.webContents.send("new-message", data);
     }
   });
 

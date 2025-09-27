@@ -23,11 +23,13 @@ io.on("connection", (socket) => {
 });
 
 // API for sending message
+// API for sending message
 app.post("/send", (req, res) => {
-  const { msg } = req.body;
-  io.emit("notification", msg);
+  const data = req.body; // pura JSON le lo
+  io.emit("notification", JSON.stringify(data)); // string bana ke bhejo
   res.json({ ok: true });
 });
+
 
 app.get("/", (req, res) => {
   res.send("🚀 Backend is running fine!");
