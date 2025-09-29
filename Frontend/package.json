@@ -10,7 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "electron-dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
-    "dist": "electron-builder"
+    "dist": "npm run build && electron-builder"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -28,11 +28,13 @@
   "build": {
     "appId": "com.defendmepro.app",
     "productName": "Defend Me Pro",
-    
     "files": [
       "dist/**/*",
       "electron/**/*",
       "package.json"
+    ],
+    "asarUnpack": [
+      "dist"
     ],
     "directories": {
       "buildResources": "build",

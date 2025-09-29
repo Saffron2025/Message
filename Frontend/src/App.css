@@ -1,42 +1,46 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.awareness-app {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f6fa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: #2a9d8f;
+  color: white;
+  padding: 20px;
   text-align: center;
+  border-bottom: 4px solid #21867a;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
 }
 
 .card {
-  padding: 2em;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+.card h2 {
+  margin-top: 0;
+  color: #2a9d8f;
 }
 
-.read-the-docs {
-  color: #888;
+.footer {
+  text-align: center;
+  padding: 12px;
+  font-size: 14px;
+  background: #fff;
+  border-top: 1px solid #ddd;
+  color: #555;
 }

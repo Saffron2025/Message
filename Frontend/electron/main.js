@@ -5,6 +5,9 @@ const io = require("socket.io-client");
 let win;
 let tray;
 
+// ✅ Force App Identity (fixes "electron.app" issue in notifications)
+app.setAppUserModelId("com.defendmepro.app");
+
 // ✅ Create Main Window
 function createWindow() {
   win = new BrowserWindow({
@@ -13,12 +16,17 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
+    icon: path.join(__dirname, "../build/icon.ico"), // Window icon
   });
 
   if (!app.isPackaged) {
-    win.loadURL("http://localhost:5173"); // Dev mode
+    // ✅ Dev mode: Vite dev server
+    win.loadURL("http://localhost:5173");
   } else {
-    win.loadFile(path.join(__dirname, "../dist/index.html")); // Build mode
+    // ✅ Production mode: Load dist/index.html
+    const indexPath = path.join(__dirname, "../dist/index.html");
+    console.log("Loading file:", indexPath); // Debug
+    win.loadURL(`file://${indexPath}`);
   }
 
   // ❌ Prevent app from quitting when closed
@@ -62,24 +70,20 @@ function setupSocket() {
     let data;
 
     try {
-      // Agar backend se JSON string aaya hai
       data = typeof msg === "string" ? JSON.parse(msg) : msg;
     } catch (err) {
-      // Agar normal string aaya hai
       data = { body: msg };
     }
 
     const notification = new Notification({
       title: data.title || "📢 Defend Me Pro",
       body: data.body || "",
-      icon: data.icon
-        ? data.icon // ⚠️ Local icon better (remote kabhi fail hota hai)
-        : path.join(__dirname, "../build/icon.ico"),
+      icon: path.join(__dirname, "../build/icon.ico"), // ✅ Always local ICO
     });
 
     notification.show();
 
-    // 👇 URL click
+    // 👇 Open URL on click
     if (data.url) {
       notification.on("click", () => {
         shell.openExternal(data.url);
